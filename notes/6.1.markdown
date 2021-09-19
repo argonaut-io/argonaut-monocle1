@@ -1,3 +1,0 @@
-6.1.
-
- * Fix to Scaladoc linking thanks to @travisbrown.

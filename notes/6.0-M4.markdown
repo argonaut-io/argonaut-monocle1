@@ -1,2 +1,0 @@
-
-6.0-M4 was only to keep up with Scalaz 7.0.0-RC1.

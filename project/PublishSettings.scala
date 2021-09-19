@@ -7,20 +7,6 @@ import xerial.sbt.Sonatype.autoImport._
 object PublishSettings {
   type Sett = Def.Setting[_]
 
-  def Scala3 = "3.0.2"
-
-  // TODO monocle
-  val scala3projects = Seq(
-    "argonautJVM",
-    "argonautJS",
-    "argonaut-catsJVM",
-    "argonaut-jawnJVM",
-    "argonaut-scalazJVM",
-    "argonaut-catsJS",
-    "argonaut-jawnJS",
-    "argonaut-scalazJS",
-  )
-
   lazy val all = Seq[Sett](
     pom
   , publish
@@ -34,13 +20,10 @@ object PublishSettings {
        checkSnapshotDependencies,
        inquireVersions,
        runTest,
-       releaseStepCommandAndRemaining("+ " + build.nativeTestId + "/run"),
        setReleaseVersion,
        commitReleaseVersion,
        tagRelease,
        publishArtifacts,
-       releaseStepCommandAndRemaining(s"++ ${Scala3}!;all ${scala3projects.map(_ + "/publishSigned").mkString(" ")}"),
-       releaseStepCommandAndRemaining("+ " + build.nativeParentId + "/publishSigned"),
        releaseStepCommandAndRemaining("sonatypeBundleRelease"),
        setNextVersion,
        commitNextVersion,
@@ -50,15 +33,14 @@ object PublishSettings {
   , licenses := Seq("BSD-3-Clause" -> url("http://www.opensource.org/licenses/BSD-3-Clause"))
   , homepage := Some(url("http://argonaut.io"))
   , autoAPIMappings := true
-  , apiURL := Some(url("http://argonaut.io/scaladocs/"))
   , useGpg := true
   )
 
   lazy val pom: Sett =
     pomExtra := (
       <scm>
-        <url>git@github.com:argonaut-io/argonaut.git</url>
-        <connection>scm:git:git@github.com:argonaut-io/argonaut.git</connection>
+        <url>git@github.com:argonaut-io/argonaut-monocle1.git</url>
+        <connection>scm:git:git@github.com:argonaut-io/argonaut-monocle1.git</connection>
       </scm>
       <developers>
         <developer>

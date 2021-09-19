@@ -1,3 +1,0 @@
-6.0.2 RELEASE.
-
- * Added missing API operations to CursorOp, fixes #79.

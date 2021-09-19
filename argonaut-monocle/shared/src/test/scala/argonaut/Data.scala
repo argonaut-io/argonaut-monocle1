@@ -41,117 +41,6 @@ object Data {
   val jsonNumberGenerator: Gen[JNumber] =
     jsonNumberRepGenerator.map(number => JNumber(number))
 
-  case class EquivalentJsonNumberPair(_1: JsonNumber, _2: JsonNumber)
-
-  val equivalentJsonNumberPair: Gen[EquivalentJsonNumberPair] = {
-    def wrapInt(n: Int): Gen[JsonNumber] = Gen.oneOf(
-      JsonLong(n),
-      JsonBigDecimal(n),
-      JsonDecimal(n.toString)
-    )
-
-    def wrapLong(n: Long): Gen[JsonNumber] = Gen.oneOf(
-      JsonLong(n),
-      JsonBigDecimal(n),
-      JsonDecimal(n.toString)
-    )
-
-    def wrapDouble(n: Double): Gen[JsonNumber] = Gen.oneOf(
-      JsonBigDecimal(BigDecimal(n)),
-      JsonDecimal(n.toString)
-    )
-
-    def wrapBigDecimal(n: BigDecimal): Gen[JsonNumber] = Gen.oneOf(
-      JsonBigDecimal(n),
-      JsonDecimal(n.toString)
-    )
-
-    def genPair[A](genValue: Gen[A])(wrap: A => Gen[JsonNumber]): Gen[EquivalentJsonNumberPair] = for {
-      n <- genValue
-      left <- wrap(n)
-      right <- wrap(n)
-    } yield EquivalentJsonNumberPair(left, right)
-
-    case class Decimal(sign: String, unscaledValue: String, scale: BigInt) {
-      def placeDecimal(n: Int): String = {
-        val adjustedScale = scale + n
-        if (n <= 0) {
-          s"""${sign}${unscaledValue}${"0" * -n}.0e$adjustedScale"""
-        } else if (n >= unscaledValue.length) {
-          s"""${sign}0.${"0" * (n - unscaledValue.length)}${unscaledValue}e$adjustedScale"""
-        } else {
-          val (int, frac) = unscaledValue.splitAt(unscaledValue.length - n)
-          s"""${sign}${int}.${frac}e$adjustedScale"""
-        }
-      }
-    }
-
-    def genDecimal: Gen[Decimal] = for {
-      unscaledValue <- arbitrary[BigInt].map(_.abs)
-      if unscaledValue != 0
-      scale <- arbitrary[BigInt]
-      negative <- arbitrary[Boolean]
-    } yield Decimal(if (negative) "-" else "", unscaledValue.toString, scale)
-
-    // This generates 2 equivalent JsonDecimals whose string representations
-    // are not necessarily equal, but whose numeric values are.
-    def jsonDecimalPair: Gen[EquivalentJsonNumberPair] = for {
-      decimal <- genDecimal
-      lshift <- arbitrary[Byte]
-      left = JsonNumber.unsafeDecimal(decimal.placeDecimal(lshift))
-      rshift <- arbitrary[Byte]
-      right = JsonNumber.unsafeDecimal(decimal.placeDecimal(rshift))
-    } yield EquivalentJsonNumberPair(left, right)
-
-    Gen.oneOf(
-      genPair(arbitrary[Int])(wrapInt),
-      genPair(arbitrary[Long])(wrapLong),
-      genPair(arbitrary[Double])(wrapDouble),
-      genPair(arbitrary[BigDecimal])(wrapBigDecimal),
-      jsonDecimalPair
-    )
-  }
-
-  case class ValidJsonNumber(value: String)
-
-  /** Generates a random, valid JSON number. */
-  val validJsonNumber: Gen[ValidJsonNumber] = {
-    val digits: Gen[String] = Gen.listOf(Gen.numChar).map(_.mkString)
-
-    val digits1: Gen[String] = for {
-      head <- Gen.numChar.map(_.toString)
-      tail <- digits
-    } yield s"$head$tail"
-
-    val integer: Gen[String] = Gen.oneOf(
-      Gen.const("0"),
-      for {
-        head <- Gen.choose('1', '9').map(_.toString)
-        tail <- digits
-      } yield s"$head$tail"
-    )
-
-    val decimal: Gen[String] = Gen.oneOf(
-      Gen.const(""),
-      digits1.map("." + _)
-    )
-
-    val exponent: Gen[String] = Gen.oneOf(
-      Gen.const(""),
-      for {
-        exp <- Gen.oneOf("e", "E")
-        sgn <- Gen.oneOf("+", "-", "")
-        num <- digits1
-      } yield s"$exp$sgn$num"
-    )
-
-    for {
-      int <- integer
-      dec <- decimal
-      exp <- exponent
-    } yield ValidJsonNumber(s"$int$dec$exp")
-  }
-
   def isValidJSONCharacter(char: Char): Boolean = !char.isControl && char != '\\' && char != '\"'
 
   val stringGenerator: Gen[String] = arbitrary[String]
@@ -219,12 +108,6 @@ object Data {
   implicit def ArbitraryJsonNumber: Arbitrary[JsonNumber] =
     Arbitrary(jsonNumberRepGenerator)
 
-  implicit def ArbitraryValidJsonNumber: Arbitrary[ValidJsonNumber] =
-    Arbitrary(validJsonNumber)
-
-  implicit def ArbitraryEquivalentJsonNumberPair: Arbitrary[EquivalentJsonNumberPair] =
-    Arbitrary(equivalentJsonNumberPair)
-
   implicit def ArbitraryJArray: Arbitrary[JArray] = Arbitrary(jsonArrayGenerator())
 
   implicit def ArbitraryJObject: Arbitrary[JObject] = Arbitrary(jsonObjectGenerator())
@@ -253,23 +136,6 @@ object Data {
       )
     }))
   }
-
-  implicit def ArbitraryVector[A: Arbitrary]: Arbitrary[Vector[A]] =
-    Arbitrary(arbitrary[List[A]].map(_.toVector))
-
-  case class SometimesNullString(s: String) {
-    override def toString = s
-  }
-
-  case class SometimesBoolString(s: String) {
-    override def toString = s
-  }
-
-  implicit val ArbitrarySometimesNullString: Arbitrary[SometimesNullString] =
-    Arbitrary(frequency((1, value("null")), (9, arbitrary[String])) map (SometimesNullString(_)))
-
-  implicit val ArbitrarySometimesBoolString: Arbitrary[SometimesBoolString] =
-    Arbitrary(frequency((1, value("true")), (1, value("false")), (8, arbitrary[String])) map (SometimesBoolString(_)))
 
   implicit val ArbitraryPrettyParams: Arbitrary[PrettyParams] = Arbitrary(
     for {

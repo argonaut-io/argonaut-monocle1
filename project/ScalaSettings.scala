@@ -1,6 +1,5 @@
 import sbt._
 import Keys._
-import org.ensime.EnsimeKeys._
 
 object ScalaSettings {
   type Sett = Def.Setting[_]
@@ -14,21 +13,13 @@ object ScalaSettings {
   lazy val all: Seq[Sett] = Def.settings(
     scalaVersion := Scala212
   , crossScalaVersions := Seq(Scala212, "2.13.6")
-  , ensimeScalaVersion := Scala212
   , test / fork := true
-  , scalacOptions ++= {
-      if (build.isScala3.value) {
-        Seq(
-        )
-      } else {
-        Seq(
-          unusedWarnings.value,
-          Seq(
-            "-Xlint"
-          )
-        ).flatten
-      }
-    }
+  , scalacOptions ++= Seq(
+      unusedWarnings.value,
+      Seq(
+        "-Xlint"
+      )
+    ).flatten
   , scalacOptions ++= Seq(
       "-deprecation"
     , "-unchecked"

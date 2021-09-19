@@ -1,6 +1,0 @@
-6.2-M1.
-
- * 7.2 release of scalaz.
- * Variance has been reintroduced back to types like EncodeJson and DecodeJson.
- * Argonaut now consists of several projects, with minimised dependencies.
- * Support for the cats library has been added.

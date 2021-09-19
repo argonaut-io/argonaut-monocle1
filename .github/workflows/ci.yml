@@ -21,7 +21,6 @@ jobs:
         java-version: "adopt@1.${{ matrix.java }}"
     - uses: coursier/cache-action@v6
     - run: sbt -v
-           -sbt-opts .github/workflows/.sbtopts
            "+mimaReportBinaryIssues"
            "+Test/compile"
            "+test"

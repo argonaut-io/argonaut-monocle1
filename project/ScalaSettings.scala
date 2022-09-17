@@ -8,7 +8,7 @@ object ScalaSettings {
     Seq("-Ywarn-unused:imports")
   }
 
-  def Scala212 = "2.12.16"
+  def Scala212 = "2.12.17"
 
   lazy val all: Seq[Sett] = Def.settings(
     scalaVersion := Scala212

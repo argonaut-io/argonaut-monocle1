@@ -12,7 +12,7 @@ object ScalaSettings {
 
   lazy val all: Seq[Sett] = Def.settings(
     scalaVersion := Scala212
-  , crossScalaVersions := Seq(Scala212, "2.13.11")
+  , crossScalaVersions := Seq(Scala212, "2.13.12")
   , test / fork := true
   , scalacOptions ++= Seq(
       unusedWarnings.value,

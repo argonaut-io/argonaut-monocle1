@@ -6,7 +6,7 @@ val argonautMonocle = argonautCrossProject(
 ).settings(
     name := "argonaut-monocle"
   , libraryDependencies ++= Seq(
-      "io.argonaut"                  %%% "argonaut-scalaz"           % "6.3.9"
+      "io.argonaut"                  %%% "argonaut-scalaz"           % "6.3.10"
     , "com.github.julien-truffaut"   %%% "monocle-core"              % monocleVersion
     , "com.github.julien-truffaut"   %%% "monocle-macro"             % monocleVersion
     , "com.github.julien-truffaut"   %%% "monocle-law"               % monocleVersion % "test"

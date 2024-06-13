@@ -75,7 +75,7 @@ object build {
         },
       )
       .settings(
-        libraryDependencies += "org.specs2" %%% "specs2-scalacheck" % "4.20.6" % "test",
+        libraryDependencies += "org.specs2" %%% "specs2-scalacheck" % "4.20.7" % "test",
       )
       .jsSettings(
         Test / parallelExecution := false,

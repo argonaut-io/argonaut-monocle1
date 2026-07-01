@@ -2,7 +2,6 @@ import sbt._
 import Keys._
 import com.jsuereth.sbtpgp.PgpKeys._
 import sbtrelease.ReleasePlugin.autoImport._
-import xerial.sbt.Sonatype.autoImport._
 
 object PublishSettings {
   type Sett = Def.Setting[_]
@@ -24,7 +23,7 @@ object PublishSettings {
        commitReleaseVersion,
        tagRelease,
        publishArtifacts,
-       releaseStepCommandAndRemaining("sonatypeBundleRelease"),
+       releaseStepCommandAndRemaining("sonaRelease"),
        setNextVersion,
        commitNextVersion,
        pushChanges
@@ -61,5 +60,5 @@ object PublishSettings {
     )
 
   lazy val publish: Sett =
-    publishTo := sonatypePublishToBundle.value
+    publishTo := (if (isSnapshot.value) None else localStaging.value)
 }

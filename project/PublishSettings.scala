@@ -4,7 +4,7 @@ import com.jsuereth.sbtpgp.PgpKeys._
 import sbtrelease.ReleasePlugin.autoImport._
 
 object PublishSettings {
-  type Sett = Def.Setting[_]
+  type Sett = Def.Setting[?]
 
   lazy val all = Seq[Sett](
     pom

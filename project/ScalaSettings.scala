@@ -2,7 +2,7 @@ import sbt._
 import Keys._
 
 object ScalaSettings {
-  type Sett = Def.Setting[_]
+  type Sett = Def.Setting[?]
 
   private[this] val unusedWarnings = Def.setting {
     Seq("-Ywarn-unused:imports")

@@ -8,7 +8,6 @@ import com.typesafe.tools.mima.plugin.MimaKeys._
 import sbtcrossproject.{CrossProject, Platform}
 import sbtcrossproject.CrossPlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
-import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object build {
   type Sett = Def.Setting[?]
@@ -19,19 +18,19 @@ object build {
 
   val monocleVersion             = "1.7.3"
 
-  private[this] val tagName = Def.setting {
+  private val tagName = Def.setting {
     s"v${if (releaseUseGlobalVersion.value) (ThisBuild / version).value else version.value}"
   }
 
-  private[this] val tagOrHash = Def.setting {
+  private val tagOrHash = Def.setting {
     if(isSnapshot.value) {
-      sys.process.Process("git rev-parse HEAD").lineStream_!.head
+      sys.process.Process("git rev-parse HEAD").lazyLines_!.head
     } else {
       tagName.value
     }
   }
 
-  private[this] val previousVersions = Def.setting {
+  private val previousVersions = Def.setting {
     val last = 6
     (0 to last).map(n => s"6.3.$n")
   }
@@ -75,7 +74,7 @@ object build {
         },
       )
       .settings(
-        libraryDependencies += "org.specs2" %%% "specs2-scalacheck" % "4.23.0" % "test",
+        libraryDependencies += "org.specs2" %% "specs2-scalacheck" % "4.23.0" % "test",
       )
       .jsSettings(
         Test / parallelExecution := false,

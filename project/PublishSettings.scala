@@ -30,7 +30,7 @@ object PublishSettings {
     )}
   , releaseCrossBuild := true
   , licenses := Seq("BSD-3-Clause" -> url("http://www.opensource.org/licenses/BSD-3-Clause"))
-  , homepage := Some(url("http://argonaut.io"))
+  , homepage := Some(url("https://github.com/argonaut-io/argonaut-monocle1"))
   , autoAPIMappings := true
   , useGpg := true
   )

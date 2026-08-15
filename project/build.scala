@@ -11,7 +11,7 @@ import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object build {
-  type Sett = Def.Setting[_]
+  type Sett = Def.Setting[?]
 
   val base = ScalaSettings.all ++ Seq[Sett](
       organization := "io.argonaut"
@@ -60,7 +60,7 @@ object build {
   )
 
   def argonautCrossProject(name: String, platforms: Seq[Platform]) = {
-    CrossProject(name, file(name))(platforms: _*)
+    CrossProject(name, file(name))(platforms*)
       .crossType(CrossType.Full)
       .settings(commonSettings)
       .jvmSettings(

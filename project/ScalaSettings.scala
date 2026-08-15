@@ -4,7 +4,7 @@ import Keys._
 object ScalaSettings {
   type Sett = Def.Setting[?]
 
-  private[this] val unusedWarnings = Def.setting {
+  private val unusedWarnings = Def.setting {
     Seq("-Ywarn-unused:imports")
   }
 
@@ -23,6 +23,7 @@ object ScalaSettings {
   , scalacOptions ++= Seq(
       "-deprecation"
     , "-unchecked"
+    , "-release:8"
     , "-feature"
     , "-language:implicitConversions,higherKinds"
     )

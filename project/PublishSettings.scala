@@ -29,8 +29,8 @@ object PublishSettings {
        pushChanges
     )}
   , releaseCrossBuild := true
-  , licenses := Seq("BSD-3-Clause" -> url("http://www.opensource.org/licenses/BSD-3-Clause"))
-  , homepage := Some(url("https://github.com/argonaut-io/argonaut-monocle1"))
+  , licenses := Seq(License("BSD-3-Clause", uri("http://www.opensource.org/licenses/BSD-3-Clause")))
+  , homepage := Some(uri("https://github.com/argonaut-io/argonaut-monocle1"))
   , autoAPIMappings := true
   , useGpg := true
   )

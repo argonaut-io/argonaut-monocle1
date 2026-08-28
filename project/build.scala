@@ -79,7 +79,7 @@ object build {
       .jsSettings(
         Test / parallelExecution := false,
         mimaPreviousArtifacts := previousVersions.value.map { n =>
-          organization.value %% s"${Keys.name.value}_sjs1" % n
+          organization.value %% Keys.name.value % n
         }.toSet,
         scalacOptions += {
           val a = (LocalRootProject / baseDirectory).value.toURI.toString
